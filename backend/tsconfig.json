@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+      "target": "ES6",                         // Specifies the ECMAScript target version
+      "module": "commonjs",                    // CommonJS module system for Node.js
+      "outDir": "./dist",                      // Output directory for compiled files
+      "rootDir": "./src",                      // Root directory of TypeScript source files
+      "typeRoots": ["./node_modules/@types", "./types"],
+      "strict": true,                          // Enable all strict type-checking options
+      "esModuleInterop": true,                 // Allows default imports from CommonJS modules
+      "skipLibCheck": true,                    // Skip type checking of declaration files
+      "forceConsistentCasingInFileNames": true // Enforce consistent casing in file names
+    },
+    "include": ["src", "types", "express.d.ts"],                        // Specify files or directories to include
+    "exclude": ["node_modules", "dist"],        // Exclude unnecessary 
+    "files":["express.d.ts"]
+
+  }
