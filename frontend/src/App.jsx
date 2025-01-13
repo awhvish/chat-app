@@ -1,19 +1,38 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import './App.css'
 import Navbar from './components/Navbar';
-import LogInPage from './components/pages/LogInPage.jsx';
-import SignUpPage from './components/pages/SignUpPage.jsx';
-import ProfilePage from './components/pages/ProfilePage.jsx';
-import SettingsPage from './components/pages/SettingsPage.jsx';
-import HomePage from './components/pages/HomePage.jsx';
+import LogInPage from './pages/LogInPage.jsx';
+import SignUpPage from './pages/SignUpPage.jsx';
+import ProfilePage from './pages/ProfilePage.jsx';
+import SettingsPage from './pages/SettingsPage.jsx';
+import HomePage from './pages/HomePage.jsx';
+import { useAuthStore } from './store/useAuthStore.js';
+import { useEffect } from 'react';
+import { Loader } from 'lucide-react';
 
 function App() {
 
+  const { checkAuth, authUser, isCheckingAuth } = useAuthStore();
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  console.log(authUser);
+
+  if (isCheckingAuth && !authUser) {
+    return (
+      <div className='flex items-center justify-center h-screen'>
+        <Loader className='size-10 animate-spin'></Loader>
+      </div>
+    )
+  }
+
   return (
     <>
-      <Navbar/>
+      <Navbar />
       <Routes>
-        <Route path='/' element={<HomePage />}></Route>
+        <Route path='/' element={authUser ? <HomePage /> : <Navigate to="/login"></Navigate>}></Route>
         <Route path='/signup' element={<SignUpPage />}></Route>
         <Route path='/login' element={<LogInPage />}></Route>
         <Route path='/settings' element={<SettingsPage />}></Route>
