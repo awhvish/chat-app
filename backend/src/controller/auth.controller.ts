@@ -31,12 +31,7 @@ export const signupController = async (req: Request, res: Response) => {
         await newUser.save();
         generateToken(newUser._id, res);
 
-        res.status(201).json({
-            _id: newUser._id,
-            fullName: newUser.fullName,
-            email: newUser.email,
-            image: newUser.image,
-        });
+        res.status(201).json({newUser});
 
     } catch (error) {
         if (error instanceof Error) {
@@ -69,12 +64,7 @@ export const signinController = async (req: Request, res: Response) => {
         }
 
         generateToken(user._id, res);
-        res.status(200).json({
-            _id: user._id, 
-            email: user.email,
-            fullName: user.fullName, 
-            image: user.image,
-        });
+        res.status(200).json({user});
     } catch (error) {
         console.log("An error occured: " + error);
         res.status(500).json({message: "Internal server error"})
@@ -99,13 +89,14 @@ export const updateProfileController = async (req: Request, res: Response) => {
 
         if (!profilePic) {
             res.status(400).json({message: "Profile picture in required"});
+            return;
         }
 
         const userId = req.user?._id;
     
         const uploadResponse = await cloudinary.uploader.upload(profilePic);
 
-        const updatedUser = User.findByIdAndUpdate(userId, {image: uploadResponse.secure_url}, {new: true});
+        const updatedUser = await User.findByIdAndUpdate(userId, {image: uploadResponse.secure_url}, {new: true}).lean();
         
         res.status(200).json(updatedUser);
         return;

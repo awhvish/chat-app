@@ -32,11 +32,11 @@ function App() {
     <>
       <Navbar />
       <Routes>
-        <Route path='/' element={authUser ? <HomePage /> : <Navigate to="/login"></Navigate>}></Route>
-        <Route path='/signup' element={<SignUpPage />}></Route>
-        <Route path='/login' element={<LogInPage />}></Route>
+        <Route path='/' element={authUser ? <HomePage /> : <Navigate to="/login" />}></Route>
+        <Route path='/signup' element={!authUser ? <SignUpPage /> : <Navigate to="/" />}></Route>
+        <Route path='/login' element={!authUser ? <LogInPage /> : <Navigate to="/" />}></Route>
         <Route path='/settings' element={<SettingsPage />}></Route>
-        <Route path='/profile' element={<ProfilePage />}></Route>
+        <Route path='/profile' element={authUser ? <ProfilePage /> :  <Navigate to="/login"></Navigate>  }></Route>
       </Routes>
     </>
   )
