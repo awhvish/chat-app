@@ -26,12 +26,7 @@ export const protectRoute = async (req: Request, res: Response, next: NextFuncti
             return;
         }
 
-        req.user = {
-            _id: user._id,
-            fullName: user.fullName,
-            email: user.email,
-            image: user.image
-        } // Attach the user to the request
+        req.user = user; // Attach the user to the request
 
         next();
     } catch (error) {

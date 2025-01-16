@@ -31,7 +31,7 @@ export const signupController = async (req: Request, res: Response) => {
         await newUser.save();
         generateToken(newUser._id, res);
 
-        res.status(201).json({newUser});
+        res.status(201).json(newUser);
 
     } catch (error) {
         if (error instanceof Error) {
@@ -64,7 +64,7 @@ export const signinController = async (req: Request, res: Response) => {
         }
 
         generateToken(user._id, res);
-        res.status(200).json({user});
+        res.status(200).json(user);
     } catch (error) {
         console.log("An error occured: " + error);
         res.status(500).json({message: "Internal server error"})
