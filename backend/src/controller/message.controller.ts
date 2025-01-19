@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import User from '../models/user.model';
 import Message from '../models/message.model';
 import cloudinary from '../lib/cloudinary';
-
+import mongoose from 'mongoose';
 
 export const getUserForSidebar = async (req:Request, res: Response) => {
     
@@ -21,25 +21,32 @@ export const getUserForSidebar = async (req:Request, res: Response) => {
 
 export const getMessages = async (req: Request, res: Response) => {
     try {
-        const {id: userToChatId} =  req.params;
-        const myId =req.user?._id;
+        const { id: userToChatId } = req.params; 
+        const myId = req.user?._id;
 
+        if (!userToChatId || !myId || !mongoose.Types.ObjectId.isValid(userToChatId) || !mongoose.Types.ObjectId.isValid(myId)) {
+            res.status(400).json({ message: "Invalid user ID(s)" });
+            return;
+        }
+
+
+        const myObjectId = new mongoose.Types.ObjectId(myId);
+        const userToChatObjectId = new mongoose.Types.ObjectId(userToChatId);
 
         const messages = await Message.find({
             $or: [
-                {senderId: myId, receiverId: userToChatId},
-                {senderId: userToChatId, receiverId: myId}
+                { senderId: myObjectId, receiverId: userToChatObjectId },
+                { senderId: userToChatObjectId, receiverId: myObjectId }
             ]
-        })
+        });
 
         res.status(200).json(messages);
-        return;
-
     } catch (error) {
-        console.log("Error in getMessage controller: " + error);
-        res.status(500).json({message: "Internal server error"});
+        console.error("Error in getMessages controller:", error);
+        res.status(500).json({ message: "Internal server error" });
     }
-}
+};
+
 
 
 export const sendMessage = async (req: Request, res: Response) => {
