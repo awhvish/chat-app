@@ -1,6 +1,7 @@
-import {create} from 'zustand';
+import { create } from 'zustand';
 import toast from 'react-hot-toast';
 import { axiosInstance } from '../lib/axios';
+import { useAuthStore } from './useAuthStore';
 
 export const useMessageStore = create((set, get) => ({
     messages: [],
@@ -9,44 +10,78 @@ export const useMessageStore = create((set, get) => ({
     isUserLoading: false,
     isMessagesLoading: false,
 
-    getUsers: async (userId) => {
-        set({isUserLoading: true});
-        try  {
+    getUsers: async () => {
+        set({ isUserLoading: true });
+        try {
             const res = await axiosInstance.get("/message/users");
-            set({users: res.data});
+            set({ users: res.data });
         } catch (error) {
-            toast.error(error.response.data.message);
-            console.log("Error getting user: " + error);
+            toast.error(error.response?.data?.message || "Failed to fetch users");
+            console.error("Error getting users:", error);
         } finally {
-            set({isUserLoading: false});
+            set({ isUserLoading: false });
         }
     },
+
     getMessages: async (userId) => {
-        set({isMessagesLoading: true});
-        console.log("Getting messages");
+        set({ isMessagesLoading: true });
         try {
             const res = await axiosInstance.get(`/message/${userId}`);
-            console.log("messages: " + res.data);
-            set ({messages: res.data});
+            console.log("Fetched messages:", res.data);
+            set({ messages: res.data });
         } catch (error) {
-            toast.error(error.response.data.message);
-            console.log("Error in getMessages: " + error);
+            toast.error(error.response?.data?.message || "Failed to fetch messages");
+            console.error("Error in getMessages:", error);
         } finally {
-            set({isMessagesLoading: false});
+            set({ isMessagesLoading: false });
         }
     },
+
     sendMessage: async (messageData) => {
         const { selectedUser, messages } = get();
         try {
             const res = await axiosInstance.post(`/message/send/${selectedUser._id}`, messageData);
-            set({messages: [...messages, res.data]});
+            const newMessages = [...messages, res.data];
+            set({ messages: newMessages });
+            return res.data;
         } catch (error) {
-            console.log("Error in sendMessage: " + error);
+            console.error("Error in sendMessage:", error);
             toast.error("Cannot send message: Internal server error");
+            return null;
         }
     },
-    setSelectedUser: (selectedUser) => {
-        set({selectedUser: selectedUser});
-    }
 
+    setSelectedUser: (selectedUser) => {
+        set({ selectedUser });
+    },
+
+    subscribeToMessages: () => {
+        const { selectedUser } = get();
+        if (!selectedUser) return;
+
+        const socket = useAuthStore.getState().socket;
+        if (!socket) {
+            console.error("No socket connection available");
+            return;
+        }
+
+        console.log("Subscribing to messages for user:", selectedUser._id);
+        
+        // Remove any existing listeners to prevent duplicates
+        socket.off("newMessage");
+        
+        socket.on("newMessage", (newMessage) => {
+            console.log("Received new message:", newMessage);
+            set((state) => ({
+                messages: [...state.messages, newMessage]
+            }));
+        });
+    },
+
+    unsubscribeFromMessages: () => {
+        const socket = useAuthStore.getState().socket;
+        if (socket) {
+            socket.off("newMessage");
+        }
+    }
 }));

@@ -12,38 +12,35 @@ const ChatContainer = () => {
         getMessages,
         isMessagesLoading,
         selectedUser,
+        subscribeToMessages,
+        unsubscribeFromMessages,
     } = useMessageStore();
 
     const { authUser } = useAuthStore();
-
-    console.log('Current state:', {
-        messages,
-        isMessagesLoading,
-        selectedUser,
-        authUser
-    });
+    const messageEndRef = useRef(null);
 
     useEffect(() => {
         if (selectedUser?._id) {
-            console.log('Attempting to fetch messages for:', selectedUser._id);
+            console.log('Setting up chat for user:', selectedUser._id);
+            
+            // First fetch messages
             getMessages(selectedUser._id);
-        } else {
-            console.log('No selected user ID available');
+            
+            // Then set up real-time updates
+            subscribeToMessages();
+
+            return () => {
+                console.log('Cleaning up chat subscriptions');
+                unsubscribeFromMessages();
+            };
         }
-    }, [selectedUser?._id, getMessages]);
-
-    console.log('Next state:', {
-        messages,
-        isMessagesLoading,
-        selectedUser,
-        authUser
-    });
-
-    const messageEndRef = useRef(null);
-
+    }, [selectedUser?._id]); // Remove unnecessary dependencies
 
     useEffect(() => {
-        messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        // Scroll to bottom whenever messages change
+        if (messageEndRef.current) {
+            messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
     }, [messages]);
 
     if (!selectedUser) {
@@ -67,12 +64,13 @@ const ChatContainer = () => {
     return (
         <div className="flex-1 flex flex-col overflow-auto">
             <ChatHeader />
-
+    
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                {messages?.map((message) => (
+                {messages.map((message, index) => (
                     <div
                         key={message._id}
                         className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"}`}
+                        ref={index === messages.length - 1 ? messageEndRef : null}
                     >
                         <div className="chat-image avatar">
                             <div className="size-10 rounded-full border">
@@ -103,10 +101,8 @@ const ChatContainer = () => {
                         </div>
                     </div>
                 ))}
-                {/* Add ref to a div at the end instead of on each message */}
-                <div ref={messageEndRef} />
             </div>
-
+    
             <MessageInput />
         </div>
     );

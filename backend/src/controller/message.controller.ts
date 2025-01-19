@@ -3,6 +3,7 @@ import User from '../models/user.model';
 import Message from '../models/message.model';
 import cloudinary from '../lib/cloudinary';
 import mongoose from 'mongoose';
+import { getRecieverSocketId, io } from '../lib/socket';
 
 export const getUserForSidebar = async (req:Request, res: Response) => {
     
@@ -52,34 +53,46 @@ export const getMessages = async (req: Request, res: Response) => {
 export const sendMessage = async (req: Request, res: Response) => {
     try {
         const { text, image } = req.body;
-        const  {id: receiverId} = req.params;
+        const { id: receiverId } = req.params;
         const senderId = req.user?._id;
 
-        let imageUrl;
+        if (!senderId) {
+            throw new Error("Sender ID is undefined");
+        }
 
+        let imageUrl;
         if (image) {
             const uploadResponse = await cloudinary.uploader.upload(image);
             imageUrl = uploadResponse.secure_url;
         }
 
-        const newMessage =  new Message({
+        const newMessage = new Message({
             senderId: senderId,
             receiverId: receiverId,
             text: text,
             image: imageUrl,
-        })
+        });
 
         await newMessage.save();
 
-        //TODO: add realtime functionality
+        // Get socket IDs
+        const receiverSocketId = getRecieverSocketId(receiverId);
+        const senderSocketId = getRecieverSocketId(senderId.toString());
+
+        // Emit message event through socket.io
+        io.emit("newMessage", newMessage);
+        
+        console.log("Message sent:", {
+            senderId,
+            receiverId,
+            senderSocketId,
+            receiverSocketId,
+            messageId: newMessage._id
+        });
 
         res.status(200).json(newMessage);
-
+    } catch (error) {
+        console.error("Error in sendMessage controller:", error);
+        res.status(500).json({ error: "Internal server error" });
     }
-    
-    catch(error) {
-        console.log("Error in sendMessage controller: " + error);
-        res.status(500).json("Internal server error");
-    }
-    
-}
+};
