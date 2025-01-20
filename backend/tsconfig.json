@@ -1,18 +1,21 @@
 {
-    "compilerOptions": {
-      "target": "ES6",                         // Specifies the ECMAScript target version
-      "module": "commonjs",                    // CommonJS module system for Node.js
-      "outDir": "./dist",                      // Output directory for compiled files
-      "rootDir": "./src",                      // Root directory of TypeScript source files
-      "typeRoots": ["./node_modules/@types", "./types"],
-      "strict": true,                          // Enable all strict type-checking options
-      "esModuleInterop": true,                 // Allows default imports from CommonJS modules
-      "skipLibCheck": true,                    // Skip type checking of declaration files
-      "forceConsistentCasingInFileNames": true, // Enforce consistent casing in file names
-      "allowImportingTsExtensions": true
-    },
-    "include": ["src", "types", "express.d.ts"],                        // Specify files or directories to include
-    "exclude": ["node_modules", "dist"],        // Exclude unnecessary 
-    "files":["express.d.ts"]
-
-  }
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "NodeNext",          // Changed from commonjs to NodeNext
+    "moduleResolution": "NodeNext", // Added this line
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowImportingTsExtensions": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,  // Changed from true to false
+    "composite": true,
+    "types": ["node", "express", "dotenv"] // Added this line
+  },
+  "include": ["src/**/*"],        // Simplified include
+  "exclude": ["node_modules", "dist"],
+  "files":["express.d.ts"]
+}
