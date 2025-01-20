@@ -1,11 +1,11 @@
 import express from "express";
-import authRoutes from "./routes/auth.route"
-import messageRoutes from "./routes/message.route"
+import authRoutes from "./routes/auth.route.ts"
+import messageRoutes from "./routes/message.route.ts"
 import dotenv from "dotenv";
-import { connectDB } from "./lib/db";
+import { connectDB } from "./lib/db.ts";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import {app, server, io} from "./lib/socket";
+import {app, server, io} from "./lib/socket.ts";
 import path from "path";
 
 dotenv.config(); //for process.env. 
@@ -17,7 +17,7 @@ const __dirname = path.resolve();
 app.use(express.json()); //extract JSON Data from request.body
 app.use(cookieParser());
 app.use(cors({
-    origin: ["http://localhost:5174"],
+    origin: ["http://localhost:5173"],
     credentials: true,
 }))
 

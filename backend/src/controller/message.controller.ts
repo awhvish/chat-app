@@ -1,9 +1,9 @@
-import { Request, Response } from 'express';
-import User from '../models/user.model';
-import Message from '../models/message.model';
-import cloudinary from '../lib/cloudinary';
+import type  { Request, Response } from 'express';
+import User from '../models/user.model.ts';
+import Message from '../models/message.model.ts';
+import cloudinary from '../lib/cloudinary.ts';
 import mongoose from 'mongoose';
-import { getRecieverSocketId, io } from '../lib/socket';
+import { getRecieverSocketId, io } from '../lib/socket.ts';
 
 export const getUserForSidebar = async (req:Request, res: Response) => {
     

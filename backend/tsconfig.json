@@ -8,7 +8,8 @@
       "strict": true,                          // Enable all strict type-checking options
       "esModuleInterop": true,                 // Allows default imports from CommonJS modules
       "skipLibCheck": true,                    // Skip type checking of declaration files
-      "forceConsistentCasingInFileNames": true // Enforce consistent casing in file names
+      "forceConsistentCasingInFileNames": true, // Enforce consistent casing in file names
+      "allowImportingTsExtensions": true
     },
     "include": ["src", "types", "express.d.ts"],                        // Specify files or directories to include
     "exclude": ["node_modules", "dist"],        // Exclude unnecessary 
