@@ -8,8 +8,8 @@ const HomePage = () => {
   const { selectedUser } = useMessageStore();
 
   return (
-    <div className="h-screen bg-base-200">
-      <div className="flex items-center justify-center pt-10">
+    <div className="text-xs md:text-sm">
+      <div className="flex items-center justify-center">
         <div className="bg-base-100 rounded-lg shadow-cl w-full  h-[calc(100vh-8rem)]">
           <div className="flex h-full rounded-lg overflow-hidden">
             <Sidebar />

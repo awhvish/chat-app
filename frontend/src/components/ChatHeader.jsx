@@ -1,15 +1,16 @@
-import { X } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useMessageStore } from "../store/useMessageStore";
 
 const ChatHeader = () => {
   const { selectedUser, setSelectedUser } = useMessageStore();
-  const { onlineUsers } = useAuthStore();
+  const { onlineUsers, toggleShowSidebar } = useAuthStore();
 
   return (
     <div className="p-2.5 border-b border-base-300">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
+
           {/* Avatar */}
           <div className="avatar">
             <div className="size-10 rounded-full relative">
@@ -27,8 +28,8 @@ const ChatHeader = () => {
         </div>
 
         {/* Close button */}
-        <button onClick={() => setSelectedUser(null)}>
-          <X />
+        <button className="block md:hidden" onClick={() => toggleShowSidebar()}>
+          <Menu />
         </button>
       </div>
     </div>

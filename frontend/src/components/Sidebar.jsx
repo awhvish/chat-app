@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import { useMessageStore } from "../store/useMessageStore";
 import { useAuthStore } from "../store/useAuthStore";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
-import { Users } from "lucide-react";
+import { Users, Menu } from "lucide-react";
+
 
 const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useMessageStore();
 
-  const { onlineUsers } = useAuthStore();
+  const { onlineUsers, showSidebar } = useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
+  const {isSidebarVisible, setIsSidebarVisible} = useState(true);
 
   useEffect(() => {
     getUsers();
@@ -21,10 +23,10 @@ const Sidebar = () => {
   if (isUsersLoading) return <SidebarSkeleton />;
 
   return (
-    <aside className="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
+    <aside className={`h-full ${showSidebar ? "w-20":"w-0"} md:w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200`}>
       <div className="border-b border-base-300 w-full p-5">
         <div className="flex items-center gap-2">
-          <Users className="size-6" />
+          <Users className=" size-6" />
           <span className="font-medium hidden lg:block">Contacts</span>
         </div>
         {/* TODO: Online filter toggle */}

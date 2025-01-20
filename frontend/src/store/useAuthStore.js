@@ -13,6 +13,7 @@ export const useAuthStore = create((set, get) => ({
     isCheckingAuth: true,
     onlineUsers: [],
     socket: null,
+    showSidebar: true,
 
     checkAuth: async () => {
         try {
@@ -102,5 +103,9 @@ export const useAuthStore = create((set, get) => ({
     disconnectSocket: () => {
         if (get().socket?.connected) get().socket.disconnect();
     },
+
+    toggleShowSidebar: () => {
+        set({showSidebar: !get().showSidebar});
+    }
 
 }));
