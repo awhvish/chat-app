@@ -10,12 +10,12 @@ import {app, server, io} from "./lib/socket";
 dotenv.config(); //for process.env. 
 
 
-const PORT = process.env.PORT;
+const PORT = parseInt(process.env.PORT || "5000", 10);
 
 app.use(express.json()); //extract JSON Data from request.body
 app.use(cookieParser());
 app.use(cors({
-    origin: "http://localhost:5174",
+    origin: ["http://localhost:5174"],
     credentials: true,
 }))
 
@@ -23,7 +23,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/message", messageRoutes);
 
 
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on PORT: ${PORT}`);
     connectDB();
 })

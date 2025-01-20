@@ -77,15 +77,15 @@ export const sendMessage = async (req: Request, res: Response) => {
 
         // Get socket IDs
         const receiverSocketId = getRecieverSocketId(receiverId);
-        const senderSocketId = getRecieverSocketId(senderId.toString());
 
-        // Emit message event through socket.io
-        io.emit("newMessage", newMessage);
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit("newMessage", newMessage);
+            console.log("Message emitted to reciever: ", receiverId);
+        }
         
         console.log("Message sent:", {
             senderId,
             receiverId,
-            senderSocketId,
             receiverSocketId,
             messageId: newMessage._id
         });

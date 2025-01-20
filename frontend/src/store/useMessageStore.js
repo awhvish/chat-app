@@ -64,13 +64,14 @@ export const useMessageStore = create((set, get) => ({
             console.error("No socket connection available");
             return;
         }
-
-        console.log("Subscribing to messages for user:", selectedUser._id);
         
         // Remove any existing listeners to prevent duplicates
         socket.off("newMessage");
         
         socket.on("newMessage", (newMessage) => {
+            console.log(newMessage);
+            if(newMessage.senderId !== selectedUser._id) return;
+
             console.log("Received new message:", newMessage);
             set((state) => ({
                 messages: [...state.messages, newMessage]

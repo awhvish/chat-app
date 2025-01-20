@@ -7,8 +7,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: ["http://localhost:5174"],
-        methods: ["GET", "POST"]
+        origin: 'http://localhost:5174',
     },
 });
 
@@ -56,10 +55,5 @@ io.on('connection', (socket) => {
         io.emit("getOnlineUsers", Object.keys(userSocketMap));
     });
 });
-
-// Debug helper to periodically log connected users
-setInterval(() => {
-    console.log("Connected users:", userSocketMap);
-}, 10000);
 
 export { io, app, server };
