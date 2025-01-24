@@ -22,7 +22,7 @@ const Sidebar = () => {
 
   return (
     <aside
-      className={`h-full ${showSidebar ? "w-52" : "w-0"} md:w-52 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200`}
+      className={`h-full ${showSidebar ? "w-full" : "w-0"} md:w-52 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200`}
     >
       <div className="border-b border-base-300 w-full p-5">
         <div className="flex items-center gap-2">

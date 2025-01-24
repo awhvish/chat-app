@@ -46,6 +46,7 @@ export const useMessageStore = create((set, get) => ({
             return res.data;
         } catch (error) {
             console.error("Error in sendMessage:", error);
+            
             toast.error("Cannot send message: Internal server error");
             return null;
         }
