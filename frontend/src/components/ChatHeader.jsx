@@ -1,4 +1,4 @@
-import { Menu } from "lucide-react";
+import { ArrowLeft } from 'lucide-react';
 import { useAuthStore } from "../store/useAuthStore";
 import { useMessageStore } from "../store/useMessageStore";
 
@@ -29,7 +29,7 @@ const ChatHeader = () => {
 
         {/* Close button */}
         <button className="block md:hidden" onClick={() => toggleShowSidebar()}>
-          <Menu />
+          <ArrowLeft />
         </button>
       </div>
     </div>

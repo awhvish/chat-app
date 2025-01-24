@@ -52,7 +52,10 @@ export const useMessageStore = create((set, get) => ({
     },
 
     setSelectedUser: (selectedUser) => {
+        const {toggleShowSidebar} = useAuthStore.getState();
+        toggleShowSidebar();
         set({ selectedUser });
+
     },
 
     subscribeToMessages: () => {
@@ -64,13 +67,13 @@ export const useMessageStore = create((set, get) => ({
             console.error("No socket connection available");
             return;
         }
-        
+
         // Remove any existing listeners to prevent duplicates
         socket.off("newMessage");
-        
+
         socket.on("newMessage", (newMessage) => {
             console.log(newMessage);
-            if(newMessage.senderId !== selectedUser._id) return;
+            if (newMessage.senderId !== selectedUser._id) return;
 
             console.log("Received new message:", newMessage);
             set((state) => ({
