@@ -3,7 +3,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import { useMessageStore } from "../store/useMessageStore";
 
 const ChatHeader = () => {
-  const { selectedUser, setSelectedUser } = useMessageStore();
+  const { selectedUser} = useMessageStore();
   const { onlineUsers, toggleShowSidebar } = useAuthStore();
 
   return (
